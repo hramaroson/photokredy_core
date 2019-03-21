@@ -20,6 +20,6 @@ public class CameraViewFactory extends PlatformViewFactory {
 
     @Override
     public PlatformView create(Context context, int id, Object o) {
-        return new MyCameraView(context, mMessenger, id, mActivity);
+        return new CameraView(context, mMessenger, id, mActivity);
     }
 }
