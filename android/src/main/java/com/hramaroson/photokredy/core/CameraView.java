@@ -52,6 +52,9 @@ public class CameraView implements PlatformView, MethodCallHandler,
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
         switch (methodCall.method) {
+            case "open":
+                open(methodCall, result);
+                break;
             case "setFlash":
                 setFlash(methodCall, result);
                 break;
@@ -114,6 +117,13 @@ public class CameraView implements PlatformView, MethodCallHandler,
                 break;
         }
         return 0;
+    }
+
+    private void open(MethodCall methodCall, MethodChannel.Result result){
+        result.success(true);
+        if(!mCameraView.isOpened()){
+            mCameraView.open();;
+        }
     }
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){

@@ -61,6 +61,14 @@ class CameraViewController {
       'plugins.hramaroson.github.io/cameraview_$id');
   final MethodChannel _channel;
 
+  Future<bool> open() async {
+    try {
+      return _channel.invokeMethod('open');
+    } on PlatformException catch (e){
+      throw CameraException(e.code, e.message);
+    }
+  }
+
   Future<bool> setFlash(Flash flash) async {
     try {
       return _channel.invokeMethod('setFlash', flash.index);
