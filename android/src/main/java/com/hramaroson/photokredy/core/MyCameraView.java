@@ -17,14 +17,14 @@ import io.flutter.plugin.common.MethodChannel;
 import static io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.platform.PlatformView;
 
-public class CameraView implements PlatformView, MethodCallHandler,
+public class MyCameraView implements PlatformView, MethodCallHandler,
         Application.ActivityLifecycleCallbacks {
 
     private final CameraView mCameraView;
     private final MethodChannel mMethodChanel;
     private final Context mContext;
 
-    CameraView(Context context, BinaryMessenger messenger, int id, Activity activity) {
+    MyCameraView(Context context, BinaryMessenger messenger, int id, Activity activity) {
         mContext = context;
         mCameraView = new CameraView(context);
         mMethodChanel = new MethodChannel(messenger, "plugins.hramaroson.github.io/cameraview_" + id);
