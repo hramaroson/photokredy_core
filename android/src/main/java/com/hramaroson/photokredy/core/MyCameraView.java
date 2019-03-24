@@ -121,9 +121,10 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     private void open(MethodCall methodCall, MethodChannel.Result result){
         result.success(true);
-        if(!mCameraView.isOpened()){
-            mCameraView.open();;
-        }
+        if(mCameraView.isOpened())
+            mCameraView.close();
+
+        mCameraView.open();
     }
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
