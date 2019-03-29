@@ -17,6 +17,9 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import static io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+
+import android.graphics.Color;
+
 import io.flutter.plugin.platform.PlatformView;
 
 public class MyCameraView implements PlatformView, MethodCallHandler,
@@ -30,6 +33,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
     MyCameraView(Context context, BinaryMessenger messenger, int id, Activity activity) {
         mContext = context;
         mCameraView = new CameraView(context);
+        mCameraView.setBackgroundColor(Color.BLACK);
         mMethodChanel = new MethodChannel(messenger, "plugins.hramaroson.github.io/cameraview_" + id);
         mMethodChanel.setMethodCallHandler(this);
 
