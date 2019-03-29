@@ -6,10 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import com.otaliastudios.cameraview.CameraView;
-import com.otaliastudios.cameraview.Mode;
-import com.otaliastudios.cameraview.Flash;
-import com.otaliastudios.cameraview.Audio;
+import io.fotoapparat.view.CameraView;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -32,10 +29,10 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
         activity.getApplication().registerActivityLifecycleCallbacks(this);
 
-        mCameraView.setMode(Mode.PICTURE);
-        mCameraView.setAudio(Audio.OFF);
+        // mCameraView.setMode(Mode.PICTURE);
+        // mCameraView.setAudio(Audio.OFF);
 
-        mCameraView.open();
+        // mCameraView.open();
 
     }
 
@@ -46,7 +43,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void dispose(){
-        mCameraView.destroy();
+        // mCameraView.destroy();
     }
 
     @Override
@@ -69,17 +66,17 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityStarted(Activity activity) {
-        mCameraView.open();
+        // mCameraView.open();
     }
 
     @Override
     public void onActivityResumed (Activity activity) {
-        mCameraView.open();
+        // mCameraView.open();
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        mCameraView.close();
+        // mCameraView.close();
     }
 
     @Override
@@ -92,55 +89,55 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        mCameraView.destroy();
+        // mCameraView.destroy();
     }
 
-    private static Flash __flashValueFromIndex(int index){
-        switch (index){
-            case 0:
-                return Flash.OFF;
-            case 1:
-                return Flash.TORCH;
-            default:
-                break;
-        }
-        return Flash.OFF;
-    }
+    // private static Flash __flashValueFromIndex(int index){
+    //     switch (index){
+    //         case 0:
+    //             return Flash.OFF;
+    //         case 1:
+    //             return Flash.TORCH;
+    //         default:
+    //             break;
+    //     }
+    //     return Flash.OFF;
+    // }
 
-    private static int __flashIndexFromValue(Flash flash){
-        switch (flash){
-            case OFF:
-                return 0;
-            case TORCH:
-                return 1;
-            default:
-                break;
-        }
-        return 0;
-    }
+    // private static int __flashIndexFromValue(Flash flash){
+    //     switch (flash){
+    //         case OFF:
+    //             return 0;
+    //         case TORCH:
+    //             return 1;
+    //         default:
+    //             break;
+    //     }
+    //     return 0;
+    // }
 
     private void open(MethodCall methodCall, MethodChannel.Result result){
         result.success(true);
-        if(mCameraView.isOpened())
-            mCameraView.close();
+        // if(mCameraView.isOpened())
+        //     mCameraView.close();
 
-        mCameraView.open();
+        // mCameraView.open();
     }
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
-        if (mCameraView.isOpened() && !mCameraView.isTakingPicture() && !mCameraView.isTakingVideo()){
-            mCameraView.setFlash(__flashValueFromIndex((int) methodCall.arguments));
-            result.success (true);
-            return;
-        }
+        // if (mCameraView.isOpened() && !mCameraView.isTakingPicture() && !mCameraView.isTakingVideo()){
+        //     mCameraView.setFlash(__flashValueFromIndex((int) methodCall.arguments));
+        //     result.success (true);
+        //     return;
+        // }
         result.success(false);
     }
 
     private void getFlash(MethodCall methodCall, MethodChannel.Result result){
-        if(mCameraView.isOpened()){
-            result.success(__flashIndexFromValue(mCameraView.getFlash()));
-            return;
-        }
+        // if(mCameraView.isOpened()){
+        //     result.success(__flashIndexFromValue(mCameraView.getFlash()));
+        //     return;
+        // }
         result.success(null);
     }
 }
