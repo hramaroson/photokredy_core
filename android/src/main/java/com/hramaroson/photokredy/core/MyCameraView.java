@@ -6,7 +6,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
+import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.view.CameraView;
+import io.fotoapparat.selector.SelectorsKt;
+import io.fotoapparat.selector.FocusModeSelectorsKt;
+import io.fotoapparat.parameter.ScaleType;
+import io.fotoapparat.configuration.UpdateConfiguration;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -17,6 +22,7 @@ import io.flutter.plugin.platform.PlatformView;
 public class MyCameraView implements PlatformView, MethodCallHandler,
         Application.ActivityLifecycleCallbacks {
 
+    private final Fotoapparat mFotoapparat;
     private final CameraView mCameraView;
     private final MethodChannel mMethodChanel;
     private final Context mContext;
@@ -29,10 +35,18 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
         activity.getApplication().registerActivityLifecycleCallbacks(this);
 
-        // mCameraView.setMode(Mode.PICTURE);
-        // mCameraView.setAudio(Audio.OFF);
+        mFotoapparat = Fotoapparat
+            .with(context)
+            .previewScaleType(ScaleType.CenterCrop)
+            .into(mCameraView)
+            .focusMode(SelectorsKt.firstAvailable(
+                FocusModeSelectorsKt.continuousFocusPicture(),
+                FocusModeSelectorsKt.autoFocus(), 
+                FocusModeSelectorsKt.fixed()
+            ))
+            .build();
 
-        // mCameraView.open();
+        mFotoapparat.start();
 
     }
 
@@ -43,7 +57,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void dispose(){
-        // mCameraView.destroy();
     }
 
     @Override
@@ -66,17 +79,16 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityStarted(Activity activity) {
-        // mCameraView.open();
     }
 
     @Override
     public void onActivityResumed (Activity activity) {
-        // mCameraView.open();
+        mFotoapparat.start();
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        // mCameraView.close();
+        mFotoapparat.stop();
     }
 
     @Override
@@ -89,7 +101,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        // mCameraView.destroy();
     }
 
     // private static Flash __flashValueFromIndex(int index){
@@ -121,7 +132,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
         // if(mCameraView.isOpened())
         //     mCameraView.close();
 
-        // mCameraView.open();
+        // mFotoapparat.start();
     }
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
@@ -130,6 +141,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
         //     result.success (true);
         //     return;
         // }
+        //fotoapparat.updateConfiguration(new UpdateConfiguration());
         result.success(false);
     }
 
