@@ -31,7 +31,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: CameraView()
+      body: Stack (
+        children:<Widget>[
+          Container(
+            color: Colors.black,
+          ),
+          Container(
+            child: CameraView(),
+          )
+        ]
+      )
     );
   }
 }
