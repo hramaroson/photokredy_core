@@ -10,6 +10,8 @@ import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.selector.SelectorsKt;
 import io.fotoapparat.selector.FocusModeSelectorsKt;
+import io.fotoapparat.selector.FlashSelectorsKt;
+import io.fotoapparat.selector.FlashSelectorsKt;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.configuration.UpdateConfiguration;
 
@@ -51,7 +53,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
             .build();
 
         mFotoapparat.start();
-
     }
 
     @Override
@@ -66,9 +67,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
         switch (methodCall.method) {
-            case "open":
-                open(methodCall, result);
-                break;
             case "setFlash":
                 setFlash(methodCall, result);
                 break;
@@ -107,53 +105,24 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
     public void onActivityDestroyed(Activity activity) {
     }
 
-    // private static Flash __flashValueFromIndex(int index){
-    //     switch (index){
-    //         case 0:
-    //             return Flash.OFF;
-    //         case 1:
-    //             return Flash.TORCH;
-    //         default:
-    //             break;
-    //     }
-    //     return Flash.OFF;
-    // }
-
-    // private static int __flashIndexFromValue(Flash flash){
-    //     switch (flash){
-    //         case OFF:
-    //             return 0;
-    //         case TORCH:
-    //             return 1;
-    //         default:
-    //             break;
-    //     }
-    //     return 0;
-    // }
-
-    private void open(MethodCall methodCall, MethodChannel.Result result){
-        result.success(true);
-        // if(mCameraView.isOpened())
-        //     mCameraView.close();
-
-        // mFotoapparat.start();
-    }
+    private final static int FLASH_OFF = 0;
+    private final static int FLASH_TORCH = 1;
+    private int mflashMode = FLASH_OFF;
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
-        // if (mCameraView.isOpened() && !mCameraView.isTakingPicture() && !mCameraView.isTakingVideo()){
-        //     mCameraView.setFlash(__flashValueFromIndex((int) methodCall.arguments));
-        //     result.success (true);
-        //     return;
-        // }
-        //fotoapparat.updateConfiguration(new UpdateConfiguration());
-        result.success(false);
+        try {
+            int _flashMode = (int) methodCall.arguments;
+            mFotoapparat.updateConfiguration(UpdateConfiguration.builder().flash(
+                (_flashMode == FLASH_TORCH )? FlashSelectorsKt.torch() : FlashSelectorsKt.off()
+            ).build());
+            mflashMode = _flashMode;
+            result.success(true);
+        } catch (IllegalStateException e) {
+            result.success(false);
+        }
     }
 
     private void getFlash(MethodCall methodCall, MethodChannel.Result result){
-        // if(mCameraView.isOpened()){
-        //     result.success(__flashIndexFromValue(mCameraView.getFlash()));
-        //     return;
-        // }
-        result.success(null);
+        result.success(mflashMode);
     }
 }
