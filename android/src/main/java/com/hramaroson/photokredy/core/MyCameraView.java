@@ -62,6 +62,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void dispose(){
+        mFotoapparat.stop();
     }
 
     @Override
@@ -77,8 +78,9 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
-
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        mFotoapparat.start();
+    }
     @Override
     public void onActivityStarted(Activity activity) {
     }
