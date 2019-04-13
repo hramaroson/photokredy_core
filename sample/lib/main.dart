@@ -26,6 +26,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  CameraController _cameraController;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,10 +39,15 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.black,
           ),
           Container(
-            child: CameraView(),
+            child: CameraView(
+              onCreated: _onCameraViewCreated
+            ),
           )
         ]
       )
     );
+  }
+  void _onCameraViewCreated(CameraController controller){
+    _cameraController = controller;
   }
 }

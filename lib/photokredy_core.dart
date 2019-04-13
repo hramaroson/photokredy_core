@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-typedef void CameraViewCreatedCallback(CameraViewController controller);
+typedef void CameraViewCreatedCallback(CameraController controller);
 
 // Flash value indicates the flash mode to be used.
 enum Flash {
@@ -25,7 +25,32 @@ class CameraView extends StatefulWidget {
   State<StatefulWidget> createState() => _CameraViewState();
 }
 
-class _CameraViewState extends State<CameraView>{
+class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
+  CameraController _cameraController;
+
+  void _init(){ 
+    if(_cameraController != null){
+        _cameraController.open();
+        setState((){});
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    _init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.resumed){
+      _init();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -38,10 +63,10 @@ class _CameraViewState extends State<CameraView>{
   }
 
   void _onPlatformViewCreated(int id) {
-    if (widget.onCreated == null) {
-      return;
+    _cameraController = new CameraController._(id);
+    if (widget.onCreated != null) {
+      widget.onCreated(_cameraController);
     }
-    widget.onCreated(new CameraViewController._(id));
   }
 }
 
@@ -55,11 +80,19 @@ class CameraException implements Exception {
   String toString() => '$runtimeType($code, $description)';
 }
 
-class CameraViewController {
-  CameraViewController._(int id)
+class CameraController {
+  CameraController._(int id)
       :_channel = new MethodChannel(
       'plugins.hramaroson.github.io/cameraview_$id');
   final MethodChannel _channel;
+
+  Future<bool> open() async {
+    try {
+      return _channel.invokeMethod('open');
+    } on PlatformException catch (e){
+      throw CameraException(e.code, e.message);
+    }
+  }
 
   Future<bool> setFlash(Flash flash) async {
     try {
