@@ -14,6 +14,7 @@ import io.fotoapparat.selector.FlashSelectorsKt;
 import io.fotoapparat.selector.FlashSelectorsKt;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.configuration.UpdateConfiguration;
+import io.fotoapparat.exception.camera.CameraException;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -68,6 +69,9 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
         switch (methodCall.method) {
+            case "open":
+                open(result);
+                break;
             case "setFlash":
                 setFlash(methodCall, result);
                 break;
@@ -79,7 +83,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        mFotoapparat.start();
     }
     @Override
     public void onActivityStarted(Activity activity) {
@@ -87,7 +90,12 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityResumed (Activity activity) {
-        mFotoapparat.start();
+        try{
+            mFotoapparat.start();
+            mMethodChanel.invokeMethod("opened", null);
+        } catch(CameraException e){
+            return;
+        }
     }
 
     @Override
@@ -105,6 +113,15 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
 
     @Override
     public void onActivityDestroyed(Activity activity) {
+    }
+    private void open(MethodChannel.Result result){
+        try{
+            mFotoapparat.start();
+            result.success(true);
+            mMethodChanel.invokeMethod("opened", null);
+        } catch (CameraException e){
+            result.success(false); 
+        }
     }
 
     private final static int FLASH_OFF = 0;
