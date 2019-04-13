@@ -80,11 +80,30 @@ class CameraException implements Exception {
   String toString() => '$runtimeType($code, $description)';
 }
 
+abstract class CameraEventListener {
+   void onOpened();
+}
+
 class CameraController {
   CameraController._(int id)
       :_channel = new MethodChannel(
       'plugins.hramaroson.github.io/cameraview_$id');
   final MethodChannel _channel;
+
+  void addCameraEventListener(CameraEventListener eventListener){
+    if( eventListener == null){
+         return;
+    }
+    _channel.setMethodCallHandler((MethodCall call) async {
+       switch (call.method) {
+         case 'opened':
+            eventListener.onOpened();
+            break;
+         default:
+            break;
+       }
+    });
+  }
 
   Future<bool> open() async {
     try {
