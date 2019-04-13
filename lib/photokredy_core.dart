@@ -82,7 +82,9 @@ class CameraException implements Exception {
 
 typedef void CameraOpenedCallback();
 class CameraEventListener {
-   final  CameraOpenedCallback onOpened = (){};
+   CameraEventListener({this.onOpened});
+
+   final  CameraOpenedCallback onOpened;
 }
 
 class CameraController {
