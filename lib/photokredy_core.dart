@@ -80,8 +80,9 @@ class CameraException implements Exception {
   String toString() => '$runtimeType($code, $description)';
 }
 
-abstract class CameraEventListener {
-   void onOpened();
+typedef void CameraOpenedCallback();
+class CameraEventListener {
+   final  CameraOpenedCallback onOpened = (){};
 }
 
 class CameraController {
