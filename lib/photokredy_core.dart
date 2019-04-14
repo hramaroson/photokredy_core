@@ -90,7 +90,7 @@ class CameraEventListener {
 class CameraController {
   CameraController._(int id)
       :_channel = new MethodChannel(
-      'plugins.hramaroson.github.io/cameraview_$id');
+      'plugins.hramaroson.github.io/photokredy_core_$id');
   final MethodChannel _channel;
 
   void addCameraEventListener(CameraEventListener eventListener){

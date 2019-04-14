@@ -37,7 +37,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
         mContext = context;
         mCameraView = new CameraView(context);
         mCameraView.setBackgroundColor(Color.BLACK);
-        mMethodChanel = new MethodChannel(messenger, "plugins.hramaroson.github.io/cameraview_" + id);
+        mMethodChanel = new MethodChannel(messenger, "plugins.hramaroson.github.io/photokredy_core_" + id);
         mMethodChanel.setMethodCallHandler(this);
 
         activity.getApplication().registerActivityLifecycleCallbacks(this);
