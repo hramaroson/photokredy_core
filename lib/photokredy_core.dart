@@ -42,7 +42,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
     if(state == AppLifecycleState.resumed){
       _open();
     }
-    else if(state ==AppLifecycleState.paused){
+    else if(state == AppLifecycleState.paused){
       _close();
     }
   }
@@ -55,7 +55,9 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
   }
 
   void _close(){
-
+    if(_cameraController != null){
+       _cameraController.close();
+    }
   }
 
   @override
@@ -70,6 +72,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
   }
   @override
   void dispose(){
+    _close();
     super.dispose();
   }
 
@@ -92,10 +95,13 @@ class CameraException implements Exception {
 }
 
 typedef void CameraOpenedCallback();
-class CameraEventListener {
-   CameraEventListener({this.onOpened});
+typedef void CameraClosedCallback();
 
-   final  CameraOpenedCallback onOpened;
+class CameraEventListener {
+   CameraEventListener({this.onOpened,this.onClosed});
+
+   final CameraOpenedCallback onOpened;
+   final CameraClosedCallback onClosed;
 }
 
 class CameraController {
@@ -103,15 +109,20 @@ class CameraController {
       :_channel = new MethodChannel(
       'plugins.hramaroson.github.io/photokredy_core/cameraview_$id');
   final MethodChannel _channel;
+  CameraEventListener _eventListener;
 
   void addCameraEventListener(CameraEventListener eventListener){
     if( eventListener == null){
          return;
     }
+    _eventListener = eventListener;
     _channel.setMethodCallHandler((MethodCall call) async {
        switch (call.method) {
          case 'opened':
-            eventListener.onOpened();
+            _eventListener.onOpened();
+            break;
+         case 'closed':
+            _eventListener.onClosed();
             break;
          default:
             break;
@@ -122,6 +133,14 @@ class CameraController {
   Future<bool> open() async {
     try {
       return _channel.invokeMethod('open');
+    } on PlatformException catch (e){
+      throw CameraException(e.code, e.message);
+    }
+  }
+
+  Future<bool> close() async {
+    try {
+      return _channel.invokeMethod('close');
     } on PlatformException catch (e){
       throw CameraException(e.code, e.message);
     }

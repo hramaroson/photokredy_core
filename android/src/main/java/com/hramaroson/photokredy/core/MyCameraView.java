@@ -67,6 +67,9 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
             case "open":
                 open(result);
                 break;
+            case "close":
+                close(result);
+                break;
             case "setFlash":
                 setFlash(methodCall, result);
                 break;
@@ -81,6 +84,16 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
             mFotoapparat.start();
             result.success(true);
             mMethodChanel.invokeMethod("opened", null);
+        } catch (CameraException e){
+            result.success(false); 
+        }
+    }
+
+    private void close(MethodChannel.Result result){
+        try {
+            mFotoapparat.stop();
+            result.success(true);
+            mMethodChanel.invokeMethod("closed", null);
         } catch (CameraException e){
             result.success(false); 
         }
