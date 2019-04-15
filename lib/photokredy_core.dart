@@ -28,27 +28,34 @@ class CameraView extends StatefulWidget {
 class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
   CameraController _cameraController;
 
-  void _init(){ 
-    if(_cameraController != null){
-        _cameraController.open();
-        setState((){});
-    }
-  }
-
   @override
   void initState(){
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _init();
+    _open();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if(state == AppLifecycleState.resumed){
-      _init();
+      _open();
     }
+    else if(state ==AppLifecycleState.paused){
+      _close();
+    }
+  }
+
+  void _open(){ 
+    if(_cameraController != null){
+        _cameraController.open();
+        setState((){});
+    }
+  }
+
+  void _close(){
+
   }
 
   @override

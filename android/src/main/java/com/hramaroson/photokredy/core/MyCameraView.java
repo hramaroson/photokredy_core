@@ -1,7 +1,5 @@
 package com.hramaroson.photokredy.core;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -25,23 +23,19 @@ import android.graphics.Color;
 
 import io.flutter.plugin.platform.PlatformView;
 
-public class MyCameraView implements PlatformView, MethodCallHandler,
-        Application.ActivityLifecycleCallbacks {
-
+public class MyCameraView implements PlatformView, MethodCallHandler {
     private final Fotoapparat mFotoapparat;
     private final CameraView mCameraView;
     private final MethodChannel mMethodChanel;
     private final Context mContext;
 
-    MyCameraView(Context context, BinaryMessenger messenger, int id, Activity activity) {
+    MyCameraView(Context context, BinaryMessenger messenger, int id) {
         mContext = context;
         mCameraView = new CameraView(context);
         mCameraView.setBackgroundColor(Color.BLACK);
         mMethodChanel = new MethodChannel(messenger, 
             "plugins.hramaroson.github.io/photokredy_core/cameraview_" + id);
         mMethodChanel.setMethodCallHandler(this);
-
-        activity.getApplication().registerActivityLifecycleCallbacks(this);
 
         mFotoapparat = Fotoapparat
             .with(context)
@@ -82,39 +76,6 @@ public class MyCameraView implements PlatformView, MethodCallHandler,
         }
     }
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-    }
-    @Override
-    public void onActivityStarted(Activity activity) {
-    }
-
-    @Override
-    public void onActivityResumed (Activity activity) {
-        try{
-            mFotoapparat.start();
-            mMethodChanel.invokeMethod("opened", null);
-        } catch(CameraException e){
-            return;
-        }
-    }
-
-    @Override
-    public void onActivityPaused(Activity activity) {
-        mFotoapparat.stop();
-    }
-
-    @Override
-    public void onActivityStopped(Activity activity) {
-
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
-
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-    }
     private void open(MethodChannel.Result result){
         try{
             mFotoapparat.start();
