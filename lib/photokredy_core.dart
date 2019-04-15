@@ -55,11 +55,15 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(
-        viewType: 'plugins.hramaroson.github.io/cameraview',
+        viewType: 'plugins.hramaroson.github.io/photokredy_core/cameraview',
         onPlatformViewCreated: _onPlatformViewCreated,
       );
     }
     return Text('Unsupported Platform');
+  }
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   void _onPlatformViewCreated(int id) {
@@ -90,7 +94,7 @@ class CameraEventListener {
 class CameraController {
   CameraController._(int id)
       :_channel = new MethodChannel(
-      'plugins.hramaroson.github.io/photokredy_core_$id');
+      'plugins.hramaroson.github.io/photokredy_core/cameraview_$id');
   final MethodChannel _channel;
 
   void addCameraEventListener(CameraEventListener eventListener){

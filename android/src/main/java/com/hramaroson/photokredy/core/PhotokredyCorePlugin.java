@@ -8,7 +8,7 @@ public class PhotokredyCorePlugin  {
   public static void registerWith(PluginRegistry.Registrar registrar) {
     registrar.platformViewRegistry()
              .registerViewFactory(
-                  "plugins.hramaroson.github.io/cameraview",
+                  "plugins.hramaroson.github.io/photokredy_core/cameraview",
                      new CameraViewFactory(registrar.messenger(), registrar.activity()));
   }
 }
