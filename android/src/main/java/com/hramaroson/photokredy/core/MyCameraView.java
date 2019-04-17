@@ -4,15 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.view.CameraView;
-import io.fotoapparat.selector.SelectorsKt;
-import io.fotoapparat.selector.FocusModeSelectorsKt;
-import io.fotoapparat.selector.FlashSelectorsKt;
-import io.fotoapparat.selector.FlashSelectorsKt;
-import io.fotoapparat.parameter.ScaleType;
-import io.fotoapparat.configuration.UpdateConfiguration;
-import io.fotoapparat.exception.camera.CameraException;
+import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.Audio;
+// import io.fotoapparat.Fotoapparat;
+// import io.fotoapparat.view.CameraView;
+// import io.fotoapparat.selector.SelectorsKt;
+// import io.fotoapparat.selector.FocusModeSelectorsKt;
+// import io.fotoapparat.selector.FlashSelectorsKt;
+// import io.fotoapparat.selector.FlashSelectorsKt;
+// import io.fotoapparat.parameter.ScaleType;
+// import io.fotoapparat.configuration.UpdateConfiguration;
+// import io.fotoapparat.exception.camera.CameraException;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -37,18 +39,20 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
             "plugins.hramaroson.github.io/photokredy_core/cameraview_" + id);
         mMethodChanel.setMethodCallHandler(this);
 
-        mFotoapparat = Fotoapparat
-            .with(context)
-            .previewScaleType(ScaleType.CenterCrop)
-            .into(mCameraView)
-            .focusMode(SelectorsKt.firstAvailable(
-                FocusModeSelectorsKt.continuousFocusPicture(),
-                FocusModeSelectorsKt.autoFocus(), 
-                FocusModeSelectorsKt.fixed()
-            ))
-            .build();
+        // mFotoapparat = Fotoapparat
+        //     .with(context)
+        //     .previewScaleType(ScaleType.CenterCrop)
+        //     .into(mCameraView)
+        //     .focusMode(SelectorsKt.firstAvailable(
+        //         FocusModeSelectorsKt.continuousFocusPicture(),
+        //         FocusModeSelectorsKt.autoFocus(), 
+        //         FocusModeSelectorsKt.fixed()
+        //     ))
+        //     .build();
 
-        mFotoapparat.start();
+        // mFotoapparat.start();
+        mCameraView.open();
+        mCameraView.setMode(Mode.PICTURE);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     @Override
     public void dispose(){
-        mFotoapparat.stop();
+        mCameraView.stop();
     }
 
     @Override
@@ -81,7 +85,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     private void open(MethodChannel.Result result){
         try{
-            mFotoapparat.start();
+            mCameraView.open();
             result.success(true);
             mMethodChanel.invokeMethod("opened", null);
         } catch (CameraException e){
@@ -91,7 +95,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     private void close(MethodChannel.Result result){
         try {
-            mFotoapparat.stop();
+            mCameraView.close();
             result.success(true);
             mMethodChanel.invokeMethod("closed", null);
         } catch (CameraException e){
@@ -105,11 +109,11 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
         try {
-            int _flashMode = (int) methodCall.arguments;
-            mFotoapparat.updateConfiguration(UpdateConfiguration.builder().flash(
-                (_flashMode == FLASH_TORCH )? FlashSelectorsKt.torch() : FlashSelectorsKt.off()
-            ).build());
-            mflashMode = _flashMode;
+            // int _flashMode = (int) methodCall.arguments;
+            // mFotoapparat.updateConfiguration(UpdateConfiguration.builder().flash(
+            //     (_flashMode == FLASH_TORCH )? FlashSelectorsKt.torch() : FlashSelectorsKt.off()
+            // ).build());
+            // mflashMode = _flashMode;
             result.success(true);
         } catch (IllegalStateException e) {
             result.success(false);
