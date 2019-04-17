@@ -34,7 +34,6 @@ android {
 
     dependencies {
         implementation 'androidx.lifecycle:lifecycle-common:2.0.0'
-        api 'com.otaliastudios:cameraview:2.0.0-beta04'
         implementation 'androidx.exifinterface:exifinterface:1.0.0'
     }
 }
