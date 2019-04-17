@@ -6,15 +6,8 @@ import android.view.View;
 
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.Audio;
-// import io.fotoapparat.Fotoapparat;
-// import io.fotoapparat.view.CameraView;
-// import io.fotoapparat.selector.SelectorsKt;
-// import io.fotoapparat.selector.FocusModeSelectorsKt;
-// import io.fotoapparat.selector.FlashSelectorsKt;
-// import io.fotoapparat.selector.FlashSelectorsKt;
-// import io.fotoapparat.parameter.ScaleType;
-// import io.fotoapparat.configuration.UpdateConfiguration;
-// import io.fotoapparat.exception.camera.CameraException;
+import com.otaliastudios.cameraview.Mode;
+import com.otaliastudios.cameraview.Flash;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -26,7 +19,6 @@ import android.graphics.Color;
 import io.flutter.plugin.platform.PlatformView;
 
 public class MyCameraView implements PlatformView, MethodCallHandler {
-    private final Fotoapparat mFotoapparat;
     private final CameraView mCameraView;
     private final MethodChannel mMethodChanel;
     private final Context mContext;
@@ -35,24 +27,14 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
         mContext = context;
         mCameraView = new CameraView(context);
         mCameraView.setBackgroundColor(Color.BLACK);
+        
         mMethodChanel = new MethodChannel(messenger, 
             "plugins.hramaroson.github.io/photokredy_core/cameraview_" + id);
         mMethodChanel.setMethodCallHandler(this);
-
-        // mFotoapparat = Fotoapparat
-        //     .with(context)
-        //     .previewScaleType(ScaleType.CenterCrop)
-        //     .into(mCameraView)
-        //     .focusMode(SelectorsKt.firstAvailable(
-        //         FocusModeSelectorsKt.continuousFocusPicture(),
-        //         FocusModeSelectorsKt.autoFocus(), 
-        //         FocusModeSelectorsKt.fixed()
-        //     ))
-        //     .build();
-
-        // mFotoapparat.start();
-        mCameraView.open();
+        
+        mCameraView.setAudio(Audio.OFF);
         mCameraView.setMode(Mode.PICTURE);
+        mCameraView.open();
     }
 
     @Override
@@ -62,7 +44,7 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     @Override
     public void dispose(){
-        mCameraView.stop();
+        mCameraView.destroy();
     }
 
     @Override
@@ -84,43 +66,25 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
     }
 
     private void open(MethodChannel.Result result){
-        try{
-            mCameraView.open();
-            result.success(true);
-            mMethodChanel.invokeMethod("opened", null);
-        } catch (CameraException e){
-            result.success(false); 
-        }
+        mCameraView.open();
+        result.success(true);
+        mMethodChanel.invokeMethod("opened", null);
     }
 
     private void close(MethodChannel.Result result){
-        try {
-            mCameraView.close();
-            result.success(true);
-            mMethodChanel.invokeMethod("closed", null);
-        } catch (CameraException e){
-            result.success(false); 
-        }
+        mCameraView.close();
+        result.success(true);
+        mMethodChanel.invokeMethod("closed", null);
     }
 
     private final static int FLASH_OFF = 0;
     private final static int FLASH_TORCH = 1;
-    private int mflashMode = FLASH_OFF;
 
     private void setFlash(MethodCall methodCall, MethodChannel.Result result){
-        try {
-            // int _flashMode = (int) methodCall.arguments;
-            // mFotoapparat.updateConfiguration(UpdateConfiguration.builder().flash(
-            //     (_flashMode == FLASH_TORCH )? FlashSelectorsKt.torch() : FlashSelectorsKt.off()
-            // ).build());
-            // mflashMode = _flashMode;
-            result.success(true);
-        } catch (IllegalStateException e) {
-            result.success(false);
-        }
+        mCameraView.setFlash(((int) methodCall.arguments == FLASH_OFF)? Flash.OFF : Flash.TORCH );
     }
 
     private void getFlash(MethodCall methodCall, MethodChannel.Result result){
-        result.success(mflashMode);
+        result.success((mCameraView.getFlash() == Flash.OFF)? FLASH_OFF : FLASH_TORCH);
     }
 }
