@@ -1,6 +1,5 @@
 group 'com.hramaroson.photokredy.core'
 version '1.0-SNAPSHOT'
-
 buildscript {
     repositories {
         google()
@@ -11,16 +10,13 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.3.1'
     }
 }
-
-rootProject.allprojects { 
+rootProject.allprojects {
     repositories {
         google()
         jcenter()
     }
 }
-
 apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion 28
 
@@ -35,5 +31,6 @@ android {
     dependencies {
         implementation 'androidx.lifecycle:lifecycle-common:2.0.0'
         implementation 'androidx.exifinterface:exifinterface:1.0.0'
+        implementation project(':cameraview')
     }
 }
