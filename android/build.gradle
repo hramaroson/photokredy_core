@@ -16,6 +16,7 @@ rootProject.allprojects {
         jcenter()
     }
 }
+
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion 28
@@ -31,6 +32,8 @@ android {
     dependencies {
         implementation 'androidx.lifecycle:lifecycle-common:2.0.0'
         implementation 'androidx.exifinterface:exifinterface:1.0.0'
-        implementation project(':cameraview')
+        
+        releaseImplementation fileTree(include: ['cameraview-release.aar'], dir: 'libs')
+        debugImplementation fileTree(include: ['cameraview-release.aar'], dir: 'libs')
     }
 }
