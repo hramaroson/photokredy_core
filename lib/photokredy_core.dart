@@ -130,25 +130,25 @@ class CameraController {
     });
   }
 
-  Future<bool> open() async {
+  Future<void> open() async {
     try {
-      return _channel.invokeMethod('open');
+      _channel.invokeMethod('open');
     } on PlatformException catch (e){
       throw CameraException(e.code, e.message);
     }
   }
 
-  Future<bool> close() async {
+  Future<void> close() async {
     try {
-      return _channel.invokeMethod('close');
+      _channel.invokeMethod('close');
     } on PlatformException catch (e){
       throw CameraException(e.code, e.message);
     }
   }
 
-  Future<bool> setFlash(Flash flash) async {
+  Future<void> setFlash(Flash flash) async {
     try {
-      return _channel.invokeMethod('setFlash', flash.index);
+      _channel.invokeMethod('setFlash', flash.index);
     } on PlatformException catch (e){
       throw CameraException(e.code, e.message);
     }
