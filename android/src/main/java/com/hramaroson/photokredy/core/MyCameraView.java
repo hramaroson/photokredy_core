@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.CameraListener;
+import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.Audio;
 import com.otaliastudios.cameraview.Mode;
+import com.otaliastudios.cameraview.Flash;
 import com.otaliastudios.cameraview.Flash;
 
 import io.flutter.plugin.common.BinaryMessenger;
@@ -34,6 +37,18 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
         
         mCameraView.setAudio(Audio.OFF);
         mCameraView.setMode(Mode.PICTURE);
+
+        mCameraView.addCameraListener(new CameraListener() {
+            @Override
+            public void onCameraOpened(CameraOptions options) {
+                mMethodChanel.invokeMethod("opened", null);
+            }
+            
+            @Override
+            public void onCameraClosed() {
+                mMethodChanel.invokeMethod("closed", null);
+            }
+        });
         mCameraView.open();
     }
 
@@ -65,16 +80,12 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
         }
     }
 
-    private void open(MethodChannel.Result result){
+    private void open(MethodChannel. Result result){
         mCameraView.open();
-        result.success(true);
-        mMethodChanel.invokeMethod("opened", null);
     }
 
-    private void close(MethodChannel.Result result){
+    private void close(MethodChannel. Result result){
         mCameraView.close();
-        result.success(true);
-        mMethodChanel.invokeMethod("closed", null);
     }
 
     private final static int FLASH_OFF = 0;
