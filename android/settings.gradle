@@ -1,4 +1,4 @@
 rootProject.name = 'photokredy_core'
 
 include ':cameraview'
-project(':cameraview').projectDir = new File('photokredy_core/cameraview/cameraview')
+project(':cameraview').projectDir = file('cameraview/cameraview')
