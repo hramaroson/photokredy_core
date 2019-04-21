@@ -3,6 +3,8 @@ package com.hramaroson.photokredy.core;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.graphics.PointF;
+import androidx.annotation.Nullable;
 
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.CameraListener;
@@ -47,6 +49,15 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
             @Override
             public void onCameraClosed() {
                 mMethodChanel.invokeMethod("closed", null);
+            }
+            
+            @Override
+            public void onFocusStart(@Nullable PointF point){
+
+            }
+            @Override
+            public void onFocusEnd(boolean successful, @Nullable  PointF point) {
+
             }
         });
         mCameraView.open();
