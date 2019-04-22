@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.graphics.PointF;
-import androidx.annotation.Nullable;
+import androidx.annotation.Nullable; 
 
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.CameraListener;
@@ -12,14 +12,13 @@ import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.Audio;
 import com.otaliastudios.cameraview.Mode;
 import com.otaliastudios.cameraview.Flash;
-import com.otaliastudios.cameraview.Flash;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import static io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 
-import android.graphics.Color;
+import android.graphics.Color;  
 
 import io.flutter.plugin.platform.PlatformView;
 
@@ -53,19 +52,20 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
             
             @Override
             public void onFocusStart(@Nullable PointF point){
+                mMethodChanel.invokeMethod("focusStarted", null);              
 
             }
             @Override
             public void onFocusEnd(boolean successful, @Nullable  PointF point) {
-
+                mMethodChanel.invokeMethod("focusEnded", null); 
             }
         });
-        mCameraView.open();
+        mCameraView.open(); 
     }
 
     @Override
     public View getView() {
-        return mCameraView;
+        return mCameraView; 
     }
 
     @Override
