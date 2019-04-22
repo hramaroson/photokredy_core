@@ -1,4 +1,4 @@
-import "dart:async";
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -94,40 +94,54 @@ class CameraException implements Exception {
   String toString() => '$runtimeType($code, $description)';
 }
 
-typedef void CameraOpenedCallback();
-typedef void CameraClosedCallback();
+typedef void CameraNoParamaterCallback();
 
 class CameraEventListener {
-   CameraEventListener({this.onOpened,this.onClosed});
+   CameraEventListener();
 
-   final CameraOpenedCallback onOpened;
-   final CameraClosedCallback onClosed;
+   final CameraNoParamaterCallback onOpened = (){};
+   final CameraNoParamaterCallback onClosed = (){};
+   final CameraNoParamaterCallback onFocusStarted = (){};
+   final CameraNoParamaterCallback onFocusEnded = (){};
 }
 
 class CameraController {
+  final MethodChannel _channel;
+  List<CameraEventListener> _eventListeners = new List();
+
   CameraController._(int id)
       :_channel = new MethodChannel(
-      'plugins.hramaroson.github.io/photokredy_core/cameraview_$id');
-  final MethodChannel _channel;
-  CameraEventListener _eventListener;
+      'plugins.hramaroson.github.io/photokredy_core/cameraview_$id'),
+      _eventListeners = new List() {
+          _channel.setMethodCallHandler((MethodCall call) async {
+          switch(call.method) {
+            case 'opened':
+                for (CameraEventListener listener in _eventListeners) 
+                  listener.onOpened();
+                break;
+            case 'closed':
+                for (CameraEventListener listener in _eventListeners) 
+                  listener.onClosed();
+                break;
+            case 'focusStarted':
+                for (CameraEventListener listener in _eventListeners) 
+                  listener.onFocusStarted();
+                break;
+            case 'focusEnded':
+                for (CameraEventListener listener in _eventListeners) 
+                  listener.onFocusEnded();
+                break;
+            default:
+                break;
+          }
+        });
+  }
 
   void addCameraEventListener(CameraEventListener eventListener){
     if( eventListener == null){
          return;
     }
-    _eventListener = eventListener;
-    _channel.setMethodCallHandler((MethodCall call) async {
-       switch (call.method) {
-         case 'opened':
-            _eventListener.onOpened();
-            break;
-         case 'closed':
-            _eventListener.onClosed();
-            break;
-         default:
-            break;
-       }
-    });
+    _eventListeners.add(eventListener);
   }
 
   Future<void> open() async {
