@@ -97,12 +97,17 @@ class CameraException implements Exception {
 typedef void CameraNoParamaterCallback();
 
 class CameraEventListener {
-   CameraEventListener();
+   CameraEventListener({
+     this.onOpened,
+     this.onClosed,  
+     this.onFocusStarted, 
+     this.onFocusEnded
+    });
 
-   final CameraNoParamaterCallback onOpened = (){};
-   final CameraNoParamaterCallback onClosed = (){};
-   final CameraNoParamaterCallback onFocusStarted = (){};
-   final CameraNoParamaterCallback onFocusEnded = (){};
+   final CameraNoParamaterCallback onOpened;
+   final CameraNoParamaterCallback onClosed;
+   final CameraNoParamaterCallback onFocusStarted ;
+   final CameraNoParamaterCallback onFocusEnded;
 }
 
 class CameraController {
