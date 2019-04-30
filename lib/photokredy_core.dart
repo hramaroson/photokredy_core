@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart';
 
 typedef void CameraViewCreatedCallback(CameraController controller);
 
@@ -15,6 +16,8 @@ enum Flash {
 }
 
 class CameraView extends StatefulWidget {
+  static String viewType = 'plugins.hramaroson.github.io/photokredy_core/cameraview';
+
   const CameraView({
     Key key,
     this.onCreated}) : super (key: key);
@@ -63,12 +66,14 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AndroidView(
-        viewType: 'plugins.hramaroson.github.io/photokredy_core/cameraview',
-        onPlatformViewCreated: _onPlatformViewCreated,
-      );
+        return AndroidView(
+            viewType: CameraView.viewType,
+            onPlatformViewCreated: _onPlatformViewCreated,
+            gestureRecognizers: Set() 
+              ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer())), 
+        );
     }
-    return Text('Unsupported Platform');
+    return Text('$defaultTargetPlatform is not yet supported by this plugin');
   }
   @override
   void dispose(){
