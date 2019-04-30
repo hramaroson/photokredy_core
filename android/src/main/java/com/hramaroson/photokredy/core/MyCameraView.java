@@ -12,12 +12,14 @@ import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.Audio;
 import com.otaliastudios.cameraview.Mode;
 import com.otaliastudios.cameraview.Flash;
+import com.otaliastudios.cameraview.Gesture;
+import com.otaliastudios.cameraview.GestureAction;
 
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodCall; 
 import io.flutter.plugin.common.MethodChannel;
 import static io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-
+ 
 import android.graphics.Color;  
 
 import io.flutter.plugin.platform.PlatformView;
@@ -38,6 +40,8 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
         
         mCameraView.setAudio(Audio.OFF);
         mCameraView.setMode(Mode.PICTURE);
+        
+        mCameraView.mapGesture(Gesture.TAP, GestureAction.FOCUS); 
 
         mCameraView.addCameraListener(new CameraListener() {
             @Override
@@ -108,5 +112,5 @@ public class MyCameraView implements PlatformView, MethodCallHandler {
 
     private void getFlash(MethodCall methodCall, MethodChannel.Result result){
         result.success((mCameraView.getFlash() == Flash.OFF)? FLASH_OFF : FLASH_TORCH);
-    }
+    } 
 }
